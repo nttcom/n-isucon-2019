@@ -1,0 +1,21 @@
+---
+- name: 'copy public dir to app from repo'
+  copy:
+    remote_src: true
+    src: '{{ tmp_dir }}/app/public'
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+
+- name: 'create symlink to all lang apps'
+  file:
+    src: '{{ app_dir }}/public'
+    dest: '{{ app_dir}}/{{ item }}/public'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    state: link
+  loop:
+    - ruby
+    - python
+    - go

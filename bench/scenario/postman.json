@@ -1,0 +1,3974 @@
+{
+	"info": {
+		"_postman_id": "edce7425-645c-43e9-8fa9-35bd59516440",
+		"name": "apitest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signin",
+			"item": [
+				{
+					"name": "/signin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b5e667f4-5434-4b8c-9a4f-d0d1b3019eba",
+								"exec": [
+									"let randstr = Math.random().toString(8).slice(-8);",
+									"const username = \"dragon-\" + randstr;",
+									"randstr = Math.random().toString(12).slice(-8);",
+									"const password = \"wyvern-\" + randstr;",
+									"",
+									"pm.globals.set(\"username\", username);",
+									"pm.globals.set(\"password\", password);",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') +  \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cce64709-f800-4ac5-a0b7-681477cb1cb2",
+								"exec": [
+									"pm.test(\"Status code is 200\",  () => { ",
+									"    pm.response.to.have.status(200); ",
+									"});",
+									"pm.test(\"Return username\",  () => { ",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson['username']).to.be.equal(pm.globals.get(\"username\"))",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{username}}\",\"password\":\"{{password}}\"}"
+						},
+						"url": "{{url}}/signin",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/signin  should fail 400 when w/o password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b5e667f4-5434-4b8c-9a4f-d0d1b3019eba",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cce64709-f800-4ac5-a0b7-681477cb1cb2",
+								"exec": [
+									"pm.test(\"Status code is 400\",  () => { ",
+									"    pm.response.to.have.status(400); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{username}}\"}"
+						},
+						"url": "{{url}}/signin",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/signin  should fail 400 when w/o username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b5e667f4-5434-4b8c-9a4f-d0d1b3019eba",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cce64709-f800-4ac5-a0b7-681477cb1cb2",
+								"exec": [
+									"pm.test(\"Status code is 400\",  () => { ",
+									"    pm.response.to.have.status(400); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"password\":\"{{password}}\"}"
+						},
+						"url": "{{url}}/signin",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/signin should fail 400 when request isn't JSON",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b5e667f4-5434-4b8c-9a4f-d0d1b3019eba",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cce64709-f800-4ac5-a0b7-681477cb1cb2",
+								"exec": [
+									"pm.test(\"Status code is 400\",  () => { ",
+									"    pm.response.to.have.status(400); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "text/plain",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{username}}\",\"password\":\"{{password}}\"}"
+						},
+						"url": "{{url}}/signin",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/signin  should fail 401",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b5e667f4-5434-4b8c-9a4f-d0d1b3019eba",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cce64709-f800-4ac5-a0b7-681477cb1cb2",
+								"exec": [
+									"pm.test(\"Status code is 401\",  () => { ",
+									"    pm.response.to.have.status(401); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"{{username}}\", \"password\":\"password\"}"
+						},
+						"url": "{{url}}/signin",
+						"description": "normal test"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "icon",
+					"item": [
+						{
+							"name": "/users/:username/icon returns default icon",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+											"pm.test(\"Should return default icon\", function () { ",
+											"    pm.response.to.have.header(\"Content-Type\", \"image/png\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "5abbae72-3128-443f-8fb4-437b1dad63ed",
+										"exec": [
+											"let randstr = Math.random().toString(8).slice(-8);",
+											"const username = \"dragon-\" + randstr;",
+											"randstr = Math.random().toString(12).slice(-8);",
+											"const password = \"wyvern-\" + randstr;",
+											"",
+											"pm.globals.set(\"username\", username);",
+											"pm.globals.set(\"password\", password);",
+											"",
+											"pm.sendRequest({",
+											"    url: pm.globals.get('url') +  \"/users\",",
+											"    method: 'POST',",
+											"    header: 'Content-Type:application/json',",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"username\": pm.globals.get(\"username\"),",
+											"            \"password\": pm.globals.get(\"password\")",
+											"        })",
+											"    }",
+											"}, function(err, response) {",
+											"",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/users/{{username}}/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/:username/icon fail w/ 404",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/users/9999/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/:username/icon",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "8cf27fc2-0501-433f-9a1d-58f9c6a5ff02",
+										"exec": [
+											"pm.sendRequest({",
+											"    url: pm.globals.get('url') + \"/signin\",",
+											"    method: 'POST',",
+											"    header: 'Content-Type:application/json',",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"username\": pm.globals.get(\"username\"),",
+											"            \"password\": pm.globals.get(\"password\")",
+											"        })",
+											"    }",
+											"}, function(err, response) {",
+											"    if (err) {",
+											"        console.log(err);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "iconimage",
+											"type": "file",
+											"src": "test_user_icon.png"
+										}
+									]
+								},
+								"url": "{{url}}/users/{{username}}/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/:username/icon",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+											"pm.test(\"Should return default icon\", function () { ",
+											"    pm.response.to.have.header(\"Content-Type\", \"image/png\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/users/{{username}}/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/otherunser/icon fails w/ 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2a53bc2f-aab0-411b-b7ec-91f530e64ebf",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										}
+									]
+								},
+								"url": "{{url}}/users/{{username}}/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/otherunser/icon fails w/ 401",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 401\", function () { pm.response.to.be.error; });",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2a53bc2f-aab0-411b-b7ec-91f530e64ebf",
+										"exec": [
+											"pm.sendRequest({",
+											"    url: pm.globals.get('url') + \"/signout\",",
+											"    method: 'GET',",
+											"    header: 'Content-Type:application/json',",
+											"}, function(err, response) {",
+											"    if (err) {",
+											"        console.log(err);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "iconimage",
+											"type": "file",
+											"src": "test_user_icon.png"
+										}
+									]
+								},
+								"url": "{{url}}/users/{{username}}/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/otherunser/icon fails w/ 403",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () { pm.response.to.be.error; });",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2a53bc2f-aab0-411b-b7ec-91f530e64ebf",
+										"exec": [
+											"pm.sendRequest({",
+											"    url: pm.globals.get('url') + \"/signin\",",
+											"    method: 'POST',",
+											"    header: 'Content-Type:application/json',",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"username\": pm.globals.get(\"username\"),",
+											"            \"password\": pm.globals.get(\"password\")",
+											"        })",
+											"    }",
+											"}, function(err, response) {",
+											"    if (err) {",
+											"        console.log(err);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "iconimage",
+											"type": "file",
+											"src": "test_user_icon.png"
+										}
+									]
+								},
+								"url": "{{url}}/users/otheruser/icon",
+								"description": "normal test"
+							},
+							"response": []
+						},
+						{
+							"name": "/users/:username/icon fails w/409",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+										"exec": [
+											"pm.test(\"Status code is 409\", function () { pm.response.to.have.status(409); });",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "iconimage",
+											"type": "file",
+											"src": "test_user_icon.png"
+										}
+									]
+								},
+								"url": "{{url}}/users/{{username}}/icon",
+								"description": "normal test"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('id');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    ",
+									"    pm.expect(resJson).not.to.have.property('salt');",
+									"    pm.expect(resJson).not.to.have.property('password_hash');",
+									"    ",
+									"    const postedUsername = pm.globals.get('username');",
+									"    pm.expect(resJson.username).to.be.equal(postedUsername);",
+									"    pm.globals.set(\"userId\",resJson.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e1c5bbe-e4bd-4a0c-8c3f-40bbf80572c9",
+								"exec": [
+									"let randstr = Math.random().toString(8).slice(-8);",
+									"const username = \"dragon-\" + randstr;",
+									"randstr = Math.random().toString(12).slice(-8);",
+									"const password = \"wyvern-\" + randstr;",
+									"",
+									"pm.globals.set(\"username\", username);",
+									"pm.globals.set(\"password\", password);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{username}}\",\"password\":\"{{password}}\"}"
+						},
+						"url": "{{url}}/users",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users should fail 400 when w/o username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e1c5bbe-e4bd-4a0c-8c3f-40bbf80572c9",
+								"exec": [
+									"randstr = Math.random().toString(12).slice(-8);",
+									"const password = \"wyvern-\" + randstr;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"password\":\"{{password}}\"}"
+						},
+						"url": "{{url}}/users",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users should fail 400 when w/o password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e1c5bbe-e4bd-4a0c-8c3f-40bbf80572c9",
+								"exec": [
+									"let randstr = Math.random().toString(8).slice(-8);",
+									"const username = \"dragon-\" + randstr;",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{username}}\"}"
+						},
+						"url": "{{url}}/users",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users should fail 409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+								"exec": [
+									"pm.test(\"Status code is 409\", () => {",
+									"    pm.response.to.have.status(409);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e1c5bbe-e4bd-4a0c-8c3f-40bbf80572c9",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{username}}\",\"password\":\"{{password}}\"}"
+						},
+						"url": "{{url}}/users",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    pm.expect(resJson).not.to.have.property('salt');",
+									"    pm.expect(resJson).not.to.have.property('password_hash');",
+									"",
+									"    const userId = pm.globals.get('userId');",
+									"    pm.expect(resJson.id).to.be.equal(userId);",
+									"",
+									"    const postedUsername = pm.globals.get('username');",
+									"    pm.expect(resJson.username).to.be.equal(postedUsername);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5a35a291-7f63-46b8-96fe-9b42a5bced45",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/users/{{username}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/user/:username should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70e51fa7-511d-498f-a034-3890c3b34fdd",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/users/unregistereduser",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username should fail w/ 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 401\",  () => { ",
+									"    pm.response.to.have.status(401); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5c070807-cdb2-412c-b789-3e4123ebf0d3",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') +  \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"dummy\":\"\"}"
+						},
+						"url": "{{url}}/users/{{username}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username should fail w/ 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 400\",  () => { ",
+									"    pm.response.to.have.status(400); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5c070807-cdb2-412c-b789-3e4123ebf0d3",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signin\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"dummy\":\"\"}"
+						},
+						"url": "{{url}}/users/{{username}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username ChangeID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 200\",  () => { ",
+									"    pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    ",
+									"    pm.expect(resJson).to.have.property('id');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    ",
+									"    const postedUsername = pm.globals.get('username');",
+									"    pm.expect(resJson.username).to.be.equal(pm.globals.get(\"newUsername\"));",
+									"    pm.expect(resJson.username).to.not.be.equal(postedUsername);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5c070807-cdb2-412c-b789-3e4123ebf0d3",
+								"exec": [
+									"const randstr = Math.random().toString(8).slice(-8);",
+									"const username = \"new-dragon-\" + randstr;",
+									"",
+									"pm.globals.set(\"newUsername\", username);",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signin\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{newUsername}}\"}"
+						},
+						"url": "{{url}}/users/{{username}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username ChangePW",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 200\",  () => { ",
+									"    pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"// Changing PW should be confirmed by sign-in again.",
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/plain',",
+									"    body: \"\"",
+									"}, function(err, response) {",
+									"",
+									"});",
+									"",
+									"pm.test(\"Should can't login w/ old password\",  () => { ",
+									"",
+									"    pm.sendRequest({",
+									"        url: pm.globals.get('url') + \"/signin\",",
+									"        method: 'POST',",
+									"        header: 'Content-Type:application/json',",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({",
+									"                \"username\": pm.globals.get(\"newUsername\"),",
+									"                \"password\": pm.globals.get(\"password\")",
+									"            })",
+									"        }",
+									"    }, function(err, response) {",
+									"        if(response){ pm.expect(response).to.have.property('code', 401)}",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Should can login w/ new password\",  () => { ",
+									"    pm.sendRequest({",
+									"        url: pm.globals.get('url') + \"/signin\",",
+									"        method: 'POST',",
+									"        header: 'Content-Type:application/json',",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({",
+									"                \"username\": pm.globals.get(\"newUsername\"),",
+									"                \"password\": pm.globals.get(\"newPassword\")",
+									"            })",
+									"        }",
+									"    }, function(err, response) {",
+									"        if(response){ pm.expect(response).to.have.property('code', 200)}",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ac9c19a0-bb74-4792-b995-8ea96329e973",
+								"exec": [
+									"const randstr = Math.random().toString(12).slice(-8);",
+									"const password = \"new-wyvern-\" + randstr;",
+									"",
+									"pm.globals.set(\"newPassword\", password);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"password\":\"{{newPassword}}\"}"
+						},
+						"url": "{{url}}/users/{{newUsername}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/otheruser should fail w/ 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9b2ec340-daf1-4b2c-b67b-77b45d96c966",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": \"otheruser\",",
+									"            \"password\": \"otheruser\"",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"newUsername\"),",
+									"                    \"password\": pm.globals.get(\"newPassword\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"hogehoge\"}"
+						},
+						"url": "{{url}}/users/otheruser",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/nonexistuser should fail w/ 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9b2ec340-daf1-4b2c-b67b-77b45d96c966",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"hogehoge\", \"password\":\"fugafuga\"}"
+						},
+						"url": "{{url}}/users/nonexistuser",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/otheruser should fail w/ 409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94624ba6-181f-4c62-aa17-1ecebf9b4451",
+								"exec": [
+									"pm.test(\"Status code is 409\",  () => { ",
+									"    pm.response.to.have.status(409); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5c070807-cdb2-412c-b789-3e4123ebf0d3",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{newUsername}}\"}"
+						},
+						"url": "{{url}}/users/{{newUsername}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/newusername should fail 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a821e00-4600-4fa8-b4bb-5304e928b0b2",
+								"exec": [
+									"pm.test(\"Status code is 403\",  () => { ",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d4d2e7dd-9709-4968-92d3-ca528d789afa",
+								"exec": [
+									"let randstr = Math.random().toString(8).slice(-8);",
+									"const username = \"dragon-\" + randstr;",
+									"randstr = Math.random().toString(12).slice(-8);",
+									"const password = \"wyvern-\" + randstr;",
+									"",
+									"pm.globals.set(\"username\", username);",
+									"pm.globals.set(\"password\", password);",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/users/{{newUsername}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/nonexistuser should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a821e00-4600-4fa8-b4bb-5304e928b0b2",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/users/nonexistuser",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a821e00-4600-4fa8-b4bb-5304e928b0b2",
+								"exec": [
+									"pm.test(\"Status code is 204\",  () => { ",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "481461df-c2fc-4bdd-a83a-e6d7cbc1b987",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signin\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"newUsername\"),",
+									"            \"password\": pm.globals.get(\"newPassword\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/users/{{newUsername}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/nonexistuser should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a821e00-4600-4fa8-b4bb-5304e928b0b2",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "49da5fe4-8e04-421f-996c-55fd2bd22b67",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/users/{{newUsername}}",
+						"description": "error handling test"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c4e0e99c-4f0b-4ee0-9dcc-bb4617c2853f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f94d39fc-416c-4300-8512-7a2e28a99205",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "/items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.globals.set('itemId', resJson.id);",
+									"    ",
+									"    pm.expect(resJson).to.have.property('id');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('title');",
+									"    pm.expect(resJson).to.have.property('body');",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    pm.expect(resJson).to.have.property('likes');",
+									"    ",
+									"    if (typeof resJson.id != \"number\") {",
+									"        throw new Error(\"id type is not int\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.username != \"string\") {",
+									"        throw new Error(\"user_id type is not string\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.title != \"string\") {",
+									"        throw new Error(\"title type is not string\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.body != \"string\") {",
+									"        throw new Error(\"body type is not string\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.likes != \"string\") {",
+									"        throw new Error(\"likes type is not string\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.created_at != \"string\") {",
+									"        throw new Error(\"created_at type is not string\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.updated_at != \"string\") {",
+									"        throw new Error(\"updated_at type is not string\");",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									"let randstr = Math.random().toString(8).slice(-8);",
+									"const username = \"dragon-\" + randstr;",
+									"randstr = Math.random().toString(12).slice(-8);",
+									"const password = \"wyvern-\" + randstr;",
+									"",
+									"pm.globals.set(\"username\", username);",
+									"pm.globals.set(\"password\", password);",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"title\", \"body\":\"body123\"}"
+						},
+						"url": "{{url}}/items",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items should fail 400 when w/o body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"title\"}"
+						},
+						"url": "{{url}}/items",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items should fail 400 when w/o title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"body\":\"body123\"}"
+						},
+						"url": "{{url}}/items",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items should fail 400 when request isn't JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "text/plain"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"title\", \"body\":\"body123\"}"
+						},
+						"url": "{{url}}/items",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"title\", \"body\":\"body123\"}"
+						},
+						"url": "{{url}}/items",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id ChangeTitle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('id');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('title');",
+									"    pm.expect(resJson).to.have.property('body');",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    pm.expect(resJson).to.have.property('likes');",
+									"    ",
+									"    if (typeof resJson.likes != \"string\") {",
+									"        throw new Error(\"likes type is not string\");",
+									"    }",
+									"    ",
+									"    pm.expect(resJson.title).to.equal(\"updated_title\")",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2f7273bc-57cb-4ece-b46c-577d4cf0de6e",
+								"exec": [
+									"pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"updated_title\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id ChangeBody",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('id');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('title');",
+									"    pm.expect(resJson).to.have.property('body');",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    pm.expect(resJson).to.have.property('likes');",
+									"    ",
+									"    if (typeof resJson.likes != \"string\") {",
+									"        throw new Error(\"likes type is not string\");",
+									"    }",
+									"    ",
+									"    pm.expect(resJson.body).to.equal(\"changed_body\")",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"body\":\"changed_body\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"dummy\":\"dummy\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "011442c1-a5eb-40b1-ba3e-2101c913e30f",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"body\":\"changed_body\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () { pm.response.to.have.status(403); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "011442c1-a5eb-40b1-ba3e-2101c913e30f",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": \"otheruser_itempatch\",",
+									"            \"password\": \"otheruser\"",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": \"otheruser_itempatch\",",
+									"                    \"password\": \"otheruser\"",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"body\":\"changed_body\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "044adf0f-4dd7-4210-a28e-d8c385795c87",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"body\":\"changed_body\"}"
+						},
+						"url": "{{url}}/items/99999",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items sorted by created_at",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"",
+									"    pm.expect(resJson).to.have.property('count');",
+									"    pm.expect(resJson.count).to.be.equal(20011); // 別テストのPOSTで事前に1件作成されているので",
+									"    ",
+									"    const resJson0 = resJson.items[0];",
+									"    pm.expect(resJson0).to.have.property('id');",
+									"    pm.expect(resJson0).to.have.property('username');",
+									"    pm.expect(resJson0).to.have.property('title');",
+									"    pm.expect(resJson0).to.have.property('created_at');",
+									"    pm.expect(resJson0).not.to.have.property('body');",
+									"    pm.expect(resJson0).not.to.have.property('user_id');",
+									"    pm.expect(resJson0).not.to.have.property('updated_at');",
+									"    pm.expect(resJson0).not.to.have.property('likes');",
+									"    var date1 = new Date(resJson.items[0].created_at);",
+									"    var date2 = new Date(resJson.items[9].created_at);",
+									"    ",
+									"    pm.expect(resJson.items.length).to.be.equal(10)",
+									"    ",
+									"    //投稿時間でソートされているか確認",
+									"    pm.expect(date1).to.be.above(date2)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0354bce0-2c15-44c4-a40a-43aad7593bac",
+								"exec": [
+									"let timer = null;",
+									"let requestIntervalMsec = 200;",
+									"let itemCounter = 0;",
+									"const maxItemsCount = 10;",
+									"",
+									"timer = setInterval(() => {",
+									"    itemCounter += 1;",
+									"    pm.sendRequest({",
+									"        url: pm.globals.get('url') + \"/items\",",
+									"        method: 'POST',",
+									"        header: 'Content-Type:application/json',",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({",
+									"                \"title\": \"title-\" + itemCounter,",
+									"                \"body\": \"body-\" + itemCounter",
+									"            })",
+									"        }",
+									"    }, function (err, response) {",
+									"        if (itemCounter === maxItemsCount) {",
+									"            clearInterval(timer)",
+									"        }",
+									"        if (response) {",
+									"",
+									"        }",
+									"    });",
+									"}, requestIntervalMsec);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items with page=2001",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('count');",
+									"    pm.expect(resJson.count).to.be.equal(20011); // 別テストのPOSTで事前に1件作成されているので",
+									"    ",
+									"    const resJson0 = resJson.items[0];",
+									"    pm.expect(resJson0).to.have.property('id');",
+									"    pm.expect(resJson0).to.have.property('username');",
+									"    pm.expect(resJson0).to.have.property('title');",
+									"    pm.expect(resJson0).to.have.property('created_at');",
+									"    pm.expect(resJson0).not.to.have.property('body');",
+									"    pm.expect(resJson0).not.to.have.property('user_id');",
+									"    pm.expect(resJson0).not.to.have.property('updated_at');",
+									"    pm.expect(resJson0).not.to.have.property('likes');",
+									"    ",
+									"    // 11post目のみか確認",
+									"    pm.expect(resJson.items.length).to.be.equal(1)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0354bce0-2c15-44c4-a40a-43aad7593bac",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/items?page=2001",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2001"
+								}
+							]
+						},
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items sorted by likes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('count');",
+									"    pm.expect(resJson.count).to.be.equal(20011); // 別テストのPOSTで事前に1件作成されているので",
+									"    ",
+									"    const resJson0 = resJson.items[0];",
+									"    pm.expect(resJson0).to.have.property('id');",
+									"    pm.expect(resJson0).to.have.property('username');",
+									"    pm.expect(resJson0).to.have.property('title');",
+									"    pm.expect(resJson0).to.have.property('created_at');",
+									"    pm.expect(resJson0).not.to.have.property('body');",
+									"    pm.expect(resJson0).not.to.have.property('user_id');",
+									"    pm.expect(resJson0).not.to.have.property('updated_at');",
+									"    pm.expect(resJson0).not.to.have.property('likes');",
+									"",
+									"    //Likeでソートされているか確認    ",
+									"",
+									"    ",
+									"    pm.sendRequest({",
+									"        url: pm.globals.get('url') + \"/items/\"+resJson.items[0].id,",
+									"        method: 'GET',",
+									"    }, function(err, response) {",
+									"        if (response) {",
+									"            var likes = response.json().likes",
+									"            var likesarray = likes.split(',');",
+									"            ",
+									"            pm.expect(likesarray.length).to.be.equal(500);",
+									"        }",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0354bce0-2c15-44c4-a40a-43aad7593bac",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/items?sort=like",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "like"
+								}
+							]
+						},
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"    pm.expect(resJson).to.have.property('id');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('title');",
+									"    pm.expect(resJson).to.have.property('body');",
+									"    pm.expect(resJson).to.have.property('created_at');",
+									"    pm.expect(resJson).to.have.property('updated_at');",
+									"    pm.expect(resJson).to.have.property('likes');",
+									"    ",
+									"    if (typeof resJson.id != \"number\") {",
+									"        throw new Error(\"id type is not int\");",
+									"    }",
+									"    if (typeof resJson.username != \"string\") {",
+									"        throw new Error(\"user_id type is string\");",
+									"    }",
+									"    if (typeof resJson.likes != \"string\") {",
+									"        throw new Error(\"likes type is not string\");",
+									"    }",
+									"    if (typeof resJson.created_at != \"string\") {",
+									"        throw new Error(\"created_at type is not string\");",
+									"    }",
+									"    if (typeof resJson.updated_at != \"string\") {",
+									"        throw new Error(\"updated_at type is not string\");",
+									"    }",
+									"    if (typeof resJson.title != \"string\") {",
+									"        throw new Error(\"title type is not string\");",
+									"    }",
+									"    if (typeof resJson.body != \"string\") {",
+									"        throw new Error(\"body type is not string\");",
+									"    }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/99999 should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/99999",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "37f5c9e7-9d85-4b94-b8b4-402b52ff3c03",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () { pm.response.to.have.status(403); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "37f5c9e7-9d85-4b94-b8b4-402b52ff3c03",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": \"otheruser_itemdelete\",",
+									"            \"password\": \"otheruser\"",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": \"otheruser_itemdelete\",",
+									"                    \"password\": \"otheruser\"",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "37f5c9e7-9d85-4b94-b8b4-402b52ff3c03",
+								"exec": [
+									"var username = pm.globals.get(\"username\");",
+									"var password = pm.globals.get(\"password\");",
+									"",
+									"pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": username,",
+									"                    \"password\": password",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/99999",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:item_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "37f5c9e7-9d85-4b94-b8b4-402b52ff3c03",
+								"exec": [
+									"var username = pm.globals.get(\"username\");",
+									"var password = pm.globals.get(\"password\");",
+									"",
+									"pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": username,",
+									"                    \"password\": password",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}",
+						"description": "normal test"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "likes",
+			"item": [
+				{
+					"name": "/items/:id/likes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0124b68e-f5df-43b1-9be2-88170fa21a6a",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            pm.sendRequest({",
+									"                url: pm.globals.get('url') + \"/items\",",
+									"                method: 'POST',",
+									"                header: 'Content-Type:application/json',",
+									"                body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"title\": \"title\",",
+									"                    \"body\": \"body123\"",
+									"                })",
+									"                }",
+									"            }, function(err, response) {",
+									"                if (response) {",
+									"                    pm.globals.set('username', response.json().username);",
+									"                    pm.globals.set('itemId', response.json().id);",
+									"                }",
+									"            });",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0124b68e-f5df-43b1-9be2-88170fa21a6a",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0124b68e-f5df-43b1-9be2-88170fa21a6a",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{url}}/items/99999/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"",
+									"    pm.expect(resJson).to.have.property('like_count');",
+									"    pm.expect(resJson).to.have.property('likes');",
+									"    pm.expect(resJson.likes.split('').some((username) => pm.globals.get('username') === username));",
+									"    ",
+									"    if (typeof resJson.like_count != \"number\") {",
+									"        throw new Error(\"like_count type is not int\");",
+									"    }",
+									"    if (typeof resJson.likes != \"string\") {",
+									"        throw new Error(\"likes type is not string\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/99999/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c9e99248-be83-4d41-809d-479856e89877",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c9e99248-be83-4d41-809d-479856e89877",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c9e99248-be83-4d41-809d-479856e89877",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/99999/likes",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/likes should fail 404 (2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c9e99248-be83-4d41-809d-479856e89877",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/likes",
+						"description": "normal test"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "/items/:id/comments return 200 when empty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"",
+									"    pm.expect(resJson).to.have.property('comments');",
+									"    pm.expect(resJson).to.have.property('item_id');",
+									"    ",
+									"    if (typeof resJson.comments != \"object\") {",
+									"        throw new Error(\"comments type is not object\");",
+									"    }",
+									"    if (typeof resJson.item_id != \"number\") {",
+									"        throw new Error(\"item_id type is not string\");",
+									"    }",
+									"    ",
+									"    pm.expect(resJson.comments).to.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/comments"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"",
+									"    pm.expect(resJson).to.have.property('item_id');",
+									"    pm.expect(resJson).to.have.property('comment');",
+									"    pm.expect(resJson).to.have.property('username');",
+									"    pm.expect(resJson).to.have.property('comment_id');",
+									"    pm.globals.set('commentId',resJson.comment_id);",
+									"        ",
+									"    if (typeof resJson.comment != \"string\") {",
+									"        throw new Error(\"comments[].comment type is not object\");",
+									"    }",
+									"    ",
+									"    if (typeof resJson.username != \"string\") {",
+									"        throw new Error(\"user[].username type is not string\");",
+									"    }",
+									"    ",
+									"     if (typeof resJson.comment_id != \"number\") {",
+									"        throw new Error(\"user[].comment_id type is not int\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            pm.sendRequest({",
+									"                url: pm.globals.get('url') + \"/items\",",
+									"                method: 'POST',",
+									"                header: 'Content-Type:application/json',",
+									"                body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"title\": \"title\",",
+									"                    \"body\": \"body123\"",
+									"                })",
+									"                }",
+									"            }, function(err, response) {",
+									"                if (response) {",
+									"                    pm.globals.set('itemId', response.json().id);",
+									"                }",
+									"            });",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"comment\":\"post_test\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}/comments",
+						"description": "normal test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments  should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"comment\":\"post_test\"}"
+						},
+						"url": "{{url}}/items/99999/comments",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments  should fail 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"dummy\":\"\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}/comments",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments  should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec5e59b7-958f-48aa-9654-032d2ba31f4a",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "08f9c362-d6a6-4806-a10f-3f5151781e23",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"comment\":\"post_test\"}"
+						},
+						"url": "{{url}}/items/{{itemId}}/comments",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+									"",
+									"pm.test(\"Should have expected JSON body\", () => {",
+									"    const resJson = pm.response.json();",
+									"",
+									"    pm.expect(resJson).to.have.property('comments');",
+									"    pm.expect(resJson).to.have.property('item_id');",
+									"    ",
+									"    if (typeof resJson.comments != \"object\") {",
+									"        throw new Error(\"comments type is not object\");",
+									"    }",
+									"    if (typeof resJson.item_id != \"number\") {",
+									"        throw new Error(\"item_id type is not string\");",
+									"    }",
+									"    ",
+									"    const comment0 = resJson.comments[0];",
+									"    ",
+									"    pm.expect(comment0).to.have.property('comment');",
+									"    pm.expect(comment0).to.have.property('username');",
+									"    pm.expect(comment0).to.have.property('comment_id');",
+									"    ",
+									"    if (typeof comment0.comment != \"string\") {",
+									"        throw new Error(\"comments[].comment type is not object\");",
+									"    }",
+									"    ",
+									"    if (typeof comment0.username != \"string\") {",
+									"        throw new Error(\"user[].user type is not string\");",
+									"    }",
+									"    ",
+									"     if (typeof comment0.comment_id != \"number\") {",
+									"        throw new Error(\"user[].comment_id type is not int\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/comments"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments  should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/items/99999/comments",
+						"description": "error handling test"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments/:comment_id should fail 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "55e1a202-e50e-406a-9399-4038b5aa677a",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/99999/comments/{{commentId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments/:comment_id should fail 404 (2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b358a604-21b4-4dcb-8d5a-a8ba21db0b5a",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/comments/100"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments/:comment_id should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9cc475da-27cd-48da-9071-76abb261a9f3",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/signout\",",
+									"    method: 'GET',",
+									"    header: 'Content-Type:application/json',",
+									"}, function(err, response) {",
+									"    if(response){}",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/comments/{{commentId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id/comments/:comment_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9cc475da-27cd-48da-9071-76abb261a9f3",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": pm.globals.get(\"username\"),",
+									"            \"password\": pm.globals.get(\"password\")",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": pm.globals.get(\"username\"),",
+									"                    \"password\": pm.globals.get(\"password\")",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/items/{{itemId}}/comments/{{commentId}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "signout",
+			"item": [
+				{
+					"name": "/signout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e6418306-7ab3-4f99-912b-bfede56721c7",
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.globals.get('url') + \"/users\",",
+									"    method: 'POST',",
+									"    header: 'Content-Type:application/json',",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            \"username\": \"otheruser\",",
+									"            \"password\": \"otheruser\"",
+									"        })",
+									"    }",
+									"}, function(err, response) {",
+									"    if (response) {",
+									"",
+									"        pm.sendRequest({",
+									"            url: pm.globals.get('url') + \"/signin\",",
+									"            method: 'POST',",
+									"            header: 'Content-Type:application/json',",
+									"            body: {",
+									"                mode: 'raw',",
+									"                raw: JSON.stringify({",
+									"                    \"username\": \"otheruser\",",
+									"                    \"password\": \"otheruser\"",
+									"                })",
+									"            }",
+									"        }, function(err, response) {",
+									"            if (response) {",
+									"",
+									"            }",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/signout"
+					},
+					"response": []
+				},
+				{
+					"name": "/signout should fail 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e6418306-7ab3-4f99-912b-bfede56721c7",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/signout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4a46ef0e-cfd1-46cb-99d9-4a590b4e5cc4",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "27e5e65b-3453-4088-bb83-19cb2509fe64",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ca5f9173-e7d3-4291-a94e-1c7094346670",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

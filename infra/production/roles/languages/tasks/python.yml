@@ -1,0 +1,10 @@
+---
+- name: 'install python3.7'
+  apt:
+    name: '{{ packages }}'
+    state: present
+  vars:
+    packages:
+      - python3.7
+      - libpython3.7-dev
+      - python3-pip

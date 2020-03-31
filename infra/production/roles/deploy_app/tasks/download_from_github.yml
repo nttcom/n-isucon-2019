@@ -1,0 +1,16 @@
+---
+- name: 'download from github'
+  git:
+    repo: git@github.com:nttcom/n-isucon-2019.git
+    dest: '{{ tmp_dir }}'
+    version: 'master'
+    accept_hostkey: true
+  become: false
+
+- name: 'create competition directory'
+  file:
+    state: directory
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ player_name }}'
+    mode: '0755'

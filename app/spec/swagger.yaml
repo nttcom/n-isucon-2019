@@ -1,0 +1,608 @@
+swagger: "2.0"
+info:
+  description: "N-ISUCON 2019用のAPI仕様書です。"
+  version: "0.9.0"
+  title: "Niita API Docs"
+  license:
+    name: "T.B.D or None"
+host: "example.com"
+basePath: "/"
+tags:
+  - name: "user"
+    description: "ユーザ操作"
+  - name: "item"
+    description: "記事操作"
+  - name: "comment"
+    description: "記事に紐づくコメント操作"
+  - name: "like"
+    description: "記事に紐づくお気に入り操作"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /users:
+    post:
+      tags:
+        - "user"
+      summary: "ユーザを作成する"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "ユーザを作成するためにユーザ名とパスワード"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "ユーザ作成成功"
+          schema:
+            $ref: "#/definitions/CreatedUser"
+        400:
+          description: "クライアント要因でユーザ作成に失敗した場合"
+        409:
+          description: "ユーザ名が衝突した場合"
+  /users/{username}:
+    get:
+      tags:
+        - "user"
+      summary: "ユーザ情報を取得する"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "ユーザ名"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "ユーザ取得成功"
+          schema:
+            $ref: "#/definitions/CreatedUser"
+        404:
+          description: "存在しないユーザ"
+    patch:
+      tags:
+        - "user"
+      summary: "ユーザ名またはパスワードを修正する。"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "ユーザ名"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "修正したいユーザ名 or/and パスワード"
+          required: false
+          schema:
+            $ref: "#/definitions/PatchUser"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "ユーザ情報の修正成功"
+          schema:
+            $ref: "#/definitions/CreatedUser"
+        400:
+          description: "クライアント要因でユーザ情報の修正に失敗した場合"
+        401:
+          description: "認証されていないのにユーザ情報を操作しようとした場合"
+        403:
+          description: "権限が足りずに修正した場合（ユーザが他ユーザの情報の修正を試みた場合）"
+        404:
+          description: "存在しないユーザにアクセスした場合"
+        409:
+          description: "修正しようとしたユーザ名が既存のユーザ名と重複した場合"
+    delete:
+      tags:
+        - "user"
+      summary: "ユーザを削除する（退会する）"
+      description: "退会した後の過去履歴は保持しない"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "ユーザ作成時に付与されるユーザID"
+          required: true
+          type: "string"
+      responses:
+        204:
+          description: "ユーザ情報の削除成功"
+        401:
+          description: "認証されていない状態でユーザ情報を操作しようとした場合"
+        403:
+          description: "権限が足りずに削除した場合（ユーザが他ユーザの情報の削除を試みた場合）"
+        404:
+          description: "削除すべきユーザが存在しない場合"
+  /users/{username}/icon:
+    get:
+      tags:
+        - "user"
+      summary: "Pathで指定されたユーザのアイコンイメージを取得する"
+      description: "ログイン不要"
+      parameters:
+        - name: "username"
+          in: "path"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "アイコンの取得成功"
+        404:
+          description: "対象のusernameが存在しない場合"
+    post:
+      tags:
+        - "user"
+      summary: "Pathで指定されたユーザのアイコンイメージを登録する。"
+      description: "アイコンイメージを登録する。ログイン必要。アイコンの登録は一回きり。PATCHは実装しない。"
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "ユーザ名"
+          required: true
+          type: "string"
+        - name: "iconimage"
+          description: "アイコンのバイナリ(swagger制約で書けず、typeはstringになってるが、binaryを直接送りつけてOK。POSTMAN参照)"
+          in: formData
+          type: "string"
+      responses:
+        201:
+          description: "アイコン登録成功"
+        400:
+          description: "クライアント要因でアイコン登録に失敗した場合"
+        401:
+          description: "認証されていないのにアイコンしようとした場合"
+        403:
+          description: "権限が足りずに登録した場合（ユーザが他ユーザのアイコンを登録した場合）"
+        409:
+          description: "すでに一度、アイコンを登録済みの場合"
+  /items:
+    post:
+      tags:
+        - "item"
+      summary: "記事を投稿する"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "記事のタイトルと本文"
+          required: true
+          schema:
+            $ref: "#/definitions/PostItem"
+      responses:
+        201:
+          description: "記事投稿に成功"
+          schema:
+            $ref: "#/definitions/CreatedItem"
+        400:
+          description: "クライアント要因で記事の作成に失敗した場合"
+        401:
+          description: "認証されていないのに記事を操作しようとした場合"
+    get:
+      tags:
+        - "item"
+      summary: "記事一覧を取得する。デフォルトで10記事取得する。1件も存在しない場合は [] を取得する"
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: 何ページ目を取得するか。省略した場合は1ページ目とする
+        - in: query
+          name: sort
+          type: string
+          description: likeを設定するかどうか。likeを設定した場合はlikeの多い順、設定しない場合は、新着記事順で返す
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "記事一覧"
+          schema:
+            $ref: '#/definitions/CreatedItems'
+  /items/{id}:
+    get:
+      tags:
+        - "item"
+      summary: "投稿されている記事を取得する"
+      description: "ログイン不要"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "記事取得に成功"
+          schema:
+            $ref: "#/definitions/CreatedItem"
+        404:
+          description: "存在しないドキュメントにアクセスした場合"
+    patch:
+      tags:
+        - "item"
+      summary: "記事を修正する"
+      description: "ログイン必須"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "記事のタイトルと本文"
+          required: true
+          schema:
+            $ref: "#/definitions/PatchItem"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CreatedItem"
+        400:
+          description: "クライアント要因で記事情報の修正に失敗した場合"
+        401:
+          description: "認証されていないのに記事を操作しようとした場合"
+        403:
+          description: "権限が足りずに修正した場合（ユーザが他ユーザのドキュメントを修正した場合）"
+        404:
+          description: "存在しないドキュメントにアクセスした場合"
+    delete:
+      tags:
+        - "item"
+      summary: "記事を削除する"
+      description: "ログイン必須"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "削除成功"
+        401:
+          description: "認証されていない状態で記事を操作しようとした場合"
+        403:
+          description: "権限が足りずに削除した場合（ユーザが他ユーザのドキュメントを削除した場合）"
+        404:
+          description: "存在しないドキュメントにアクセスした場合"
+  /items/{id}/comments:
+    post:
+      tags:
+        - "comment"
+      summary: "コメントを投稿する"
+      description: "ログイン必須"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+        - name: "comment"
+          in: "body"
+          description: "投稿されたコメント"
+          required: true
+          schema:
+            $ref: "#/definitions/PostComment"
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: "#/definitions/PostedComment"
+        400:
+          description: "クライアント要因でコメントの作成に失敗した場合"
+        401:
+          description: "認証されていないのに記事にコメントしようとした場合"
+        404:
+          description: "存在しない記事のIDを指定された場合"
+    get:
+      tags:
+        - "comment"
+      summary: "コメントを取得する"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "OK。コメントが1件もない場合も200を返す"
+          schema:
+            $ref: "#/definitions/PostedComments"
+        404:
+          description: "存在しない記事のIDを指定された場合"
+  /items/{id}/comments/{comment_id}:
+    delete:
+      tags:
+        - "comment"
+      summary: "コメントを削除する"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "記事のID"
+          required: true
+          type: "integer"
+        - name: "comment_id"
+          in: "path"
+          description: "コメントのID"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "ユーザ情報の削除成功"
+        401:
+          description: "認証されていない状態で、自身のコメントを記事を削除しようとした場合"
+        403:
+          description: "権限が足りずに修正した場合（ユーザが他ユーザのコメントを削除した場合）"
+        404:
+          description: "記事が存在しない、または、削除すべきコメントが存在しない場合"
+  /items/{id}/likes:
+    get:
+      tags:
+        - "like"
+      summary: "like数を取得する"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Likes"
+        404:
+          description: "記事が存在しない場合"
+    post:
+      tags:
+        - "like"
+      summary: "likeをつける"
+      description: "ログイン必須"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: OK
+        401:
+          description: "認証されていないのにlikeをつけようとした場合"
+        404:
+          description: "記事が存在しない場合"
+    delete:
+      tags:
+        - "like"
+      summary: "likeを消す"
+      description: "ログイン必須"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "投稿時に付与される記事のID"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: OK
+        401:
+          description: "認証されていないのにlikeを消そうとした場合"
+        404:
+          description: "記事が存在しない場合 or 自分がlikeしていない場合"
+  /signin:
+    post:
+      summary: "ログインする"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "body"
+          description: "ユーザ名とパスワードでログインする。ログイン成功して応答したusernameは、SPA側の描画で利用する。ログイン成功の場合は、HTTP Headerにてサーバサイドでログイン成功したときのsession IDを払い出し、Set-Cookie にて設定する。"
+          required: true
+          schema:
+            $ref: "#/definitions/SignupUser"
+      responses:
+        200:
+          description: "ログインに成功"
+          schema:
+            $ref: "#/definitions/SignedInUser"
+        400:
+          description: "クライアント要因でユーザのログインに失敗（パラメータ不足など）"
+        401:
+          description: "ログインに失敗(ユーザ名、パスワード間違え)"
+  /signout:
+    get:
+      summary: "ログアウトする"
+      description: "ログイン必須、ログインしていない場合はlogin画面へ、SPAにてリダイレクトする。"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        204:
+          description: "ログアウトに成功"
+        401:
+          description: "ログインしていない状態でサインアウトした場合"
+  /initialize:
+    get:
+      summary: "ISUCONのベンチ開始前にレコードを削除する"
+      responses:
+        200:
+          description: "レコード削除に成功した"
+definitions:
+  User:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        example: "nicename"
+        minLength: 1
+        maxLength: 20
+      password:
+        type: "string"
+        format: "password"
+        example: "nicepassword"
+        minLength: 8
+        maxLength: 100
+  CreatedUser:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      username:
+        type: "string"
+        example: "nicename"
+        minLength: 1
+        maxLength: 100
+      created_at:
+        type: "string"
+        format: "date-time"
+      updated_at:
+        type: "string"
+        format: "date-time"
+  SignupUser:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        example: "nicename"
+        minLength: 1
+        maxLength: 20
+      password:
+        type: "string"
+        format: "password"
+        example: "nicepassword"
+        minLength: 8
+        maxLength: 100
+  SignedInUser:
+    type: object
+    properties:
+      username:
+        type: "string"
+        example: "niceuser"
+  PatchUser:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  PostItem:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      body:
+        type: "string"
+  CreatedItem:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        example: "10000"
+      username:
+        type: "string"
+        example: "nicename"
+      title:
+        type: "string"
+        example: "記事のタイトル"
+      body:
+        type: "string"
+        example: "記事の本文"
+      likes:
+        type: "string"
+        example: "1, 2, 3, ..., <user_id>"
+      created_at:
+        type: "string"
+        format: "date-time"
+      updated_at:
+        type: "string"
+        format: "date-time"
+  CreatedItems:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+        example: "10000"
+      items:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            item_id:
+              type: "integer"
+              example: 10000
+            title:
+              type: "string"
+              example: "記事のタイトル"
+            created_at:
+              type: "string"
+              format: "date-time"
+            username:
+              type: "string"
+              example: "nicename"
+  PatchItem:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        example: "修正用のタイトル"
+      body:
+        type: "string"
+        example: "修正用の本文"
+  PostComment:
+    type: "object"
+    properties:
+      comment:
+        type: "string"
+  PostedComment:
+    type: "object"
+    properties:
+      item_id:
+        type: "integer"
+        example: 100
+      comment_id:
+        type: "integer"
+        example: 100
+      comment:
+        type: "string"
+        example: "コメントの内容"
+      username:
+        type: "string"
+        example: 100
+  PostedComments:
+    type: "object"
+    properties:
+      item_id:
+        type: "integer"
+        example: 100
+      comments:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            comment_id:
+              type: "integer"
+              example: 100
+            comment:
+              type: "string"
+              example: "コメントの内容"
+            username:
+              type: "string"
+              example: 100
+  Likes:
+    type: "object"
+    properties:
+      like_count:
+        type: "integer"
+        example: "100"
+      likes:
+        type: "string"
+        example: "foo, bar, hoge, ..., <username>"

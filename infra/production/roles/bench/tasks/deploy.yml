@@ -1,0 +1,15 @@
+---
+- name: 'copy scenario dir to vm'
+  copy:
+    src: '{{ local_scenario_dir }}'
+    dest: '{{ tmp_dir }}'
+  become: false
+
+- name: 'copy bench dir to admin home dir'
+  copy:
+    remote_src: true
+    src: '{{ tmp_dir }}/scenario'
+    dest: '{{ bench_dir }}'
+    owner: '{{ admin_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'

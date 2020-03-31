@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
+gem 'mysql2'
+gem 'rack-contrib'
+gem 'sinatra'
+gem 'sinatra-contrib'
+
+group :development do
+  gem 'awesome_print'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'rubocop'
+end

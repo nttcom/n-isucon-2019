@@ -1,0 +1,55 @@
+---
+- name: 'install pymysql for setting up mysql'
+  pip:
+    name: PyMySQL
+    executable: pip3
+    state: present
+
+- name: 'set mysql root password'
+  debconf:
+    name: mysql-server
+    question: 'mysql-server/root_password'
+    value: '{{ db.root_password }}'
+    vtype: password
+
+- name: 'confirm mysql root password'
+  debconf:
+    name: mysql-server
+    question: 'mysql-server/root_password_again'
+    value: '{{ db.root_password }}'
+    vtype: password
+
+
+- name: 'install mysqld'
+  apt:
+    name: '{{ packages }}'
+    state: present
+  vars:
+    packages:
+      - mysql-server
+      - libmysqld-dev
+      - mysql-client
+
+- name: 'enable mysql-server service'
+  service:
+    name: mysql
+    state: started
+    enabled: true
+
+- name: 'create database'
+  mysql_db:
+    name: '{{ db.name }}'
+    state: present
+    login_user: root
+    login_password: '{{ db.root_password }}'
+  ignore_errors: true
+
+- name: 'create mysql user'
+  mysql_user:
+    name: '{{ db.username }}'
+    password: '{{ db.password }}'
+    priv: '*.*:ALL,GRANT'
+    state: present
+    login_user: root
+    login_password: '{{ db.root_password }}'
+  ignore_errors: true

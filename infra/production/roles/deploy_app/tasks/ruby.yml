@@ -1,0 +1,16 @@
+---
+- name: 'copy ruby app from repo'
+  copy:
+    remote_src: true
+    src: '{{ tmp_dir }}/app/ruby'
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+
+- name: 'bundle install'
+  bundler:
+    state: present
+    chdir: '{{ app_dir }}/ruby'
+    deployment_mode: true
+  become_user: '{{ player_name }}'

@@ -1,0 +1,13 @@
+[Unit]
+Description=Niita Benchmark
+After=network.target
+
+[Service]
+User=isucon_admin
+Type=simple
+EnvironmentFile=/home/isucon_admin/.env
+WorkingDirectory=/home/isucon_admin/n-isucon-2019/bench/scenario
+ExecStart=/home/isucon_admin/n-isucon-2019/bench/scenario/bench_loop.sh
+
+[Install]
+WantedBy=multi-user.target

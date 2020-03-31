@@ -1,0 +1,13 @@
+[Unit]
+Description=N-ISUCON portal app
+After=mysql.service
+
+[Service]
+User=isucon_admin
+Type=simple
+EnvironmentFile=/home/isucon_admin/n-isucon-2019/portal/.env
+WorkingDirectory=/home/isucon_admin/n-isucon-2019/portal
+ExecStart=/home/isucon_admin/.rbenv/shims/bundle exec pumactl start -F /home/isucon_admin/n-isucon-2019/portal/puma.rb
+
+[Install]
+WantedBy=multi-user.targetn

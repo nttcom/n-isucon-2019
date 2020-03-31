@@ -1,0 +1,12 @@
+---
+- include: python.yml
+  become: true
+
+- include: ruby.yml
+  become: true
+
+- include: golang.yml
+  become: true
+
+- include: node.yml
+  become: true

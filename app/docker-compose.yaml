@@ -1,0 +1,45 @@
+version: '3.3'
+services:
+  db:
+    build:
+      context: ./common/db/
+      dockerfile: Dockerfile
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    restart: always
+
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile-python
+    image: python
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    env_file:
+      - ./common/db/.env
+
+  ruby:
+    build:
+      context: .
+      dockerfile: Dockerfile-ruby
+    image: ruby
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    env_file:
+      - ./common/db/.env
+
+  go:
+    build:
+      context: .
+      dockerfile: Dockerfile-go
+    image: go
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    env_file:
+      - ./common/db/.env
+

@@ -1,0 +1,11 @@
+---
+- name: reload systemd
+  systemd:
+    daemon_reload: true
+  become: true
+
+- name: 'run initialize'
+  command: ./initialize_all_db.sh
+  args:
+    chdir: '{{ app_dir }}/common/db/'
+  become: true

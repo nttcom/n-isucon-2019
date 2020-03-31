@@ -1,0 +1,55 @@
+---
+- name: 'enable ssh password authentication'
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: 'PasswordAuthentication no'
+    replace: 'PasswordAuthentication yes'
+#  notify: restart sshd
+
+- name: restart sshd
+  systemd:
+    name: ssh
+    state: reloaded
+
+- name: 'create isucon group'
+  group:
+    name: '{{ group_name }}'
+    state: present
+
+- name: 'set sudo no password to isucon group'
+  lineinfile:
+    dest: /etc/sudoers
+    line: '%{{ group_name }} ALL=NOPASSWD: ALL'
+
+- name: 'create isucon player user'
+  user:
+    name: '{{ player_name }}'
+    comment: isucon player
+    groups: '{{ group_name }}'
+    shell: /bin/bash
+    password: "{{ player_password | password_hash('sha512') }}"
+  when: inventory_hostname in groups['app']
+
+- name: 'create .ssh dir for player'
+  file:
+    state: directory
+    dest: '/home/{{ player_name }}/.ssh'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0700'
+  when: inventory_hostname in groups['app']
+
+- name: 'create isucon admin user'
+  user:
+    name: '{{ admin_name }}'
+    comment: isucon administrator
+    groups: '{{ group_name }}'
+    shell: /bin/bash
+
+- name: 'create .ssh dir for admin'
+  file:
+    state: directory
+    dest: '/home/{{ admin_name }}/.ssh'
+    owner: '{{ admin_name }}'
+    group: '{{ admin_name }}'
+    mode: '0700'

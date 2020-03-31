@@ -1,0 +1,18 @@
+---
+- name: 'copy go app from repo'
+  copy:
+    remote_src: true
+    src: '{{ tmp_dir }}/app/go'
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+
+- name: 'install dependent libs'
+  command: 'go get {{ item }}'
+  loop:
+    - github.com/zenazn/goji
+    - github.com/zenazn/goji/web
+    - github.com/go-sql-driver/mysql
+    - github.com/gorilla/sessions
+  become_user: '{{ player_name }}'

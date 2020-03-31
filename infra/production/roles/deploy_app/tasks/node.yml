@@ -1,0 +1,15 @@
+---
+- name: 'copy node app from repo'
+  copy:
+    remote_src: true
+    src: '{{ tmp_dir }}/app/node'
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+
+- name: 'npm install'
+  npm:
+    state: present
+    path: '{{ app_dir}}/node'
+  become_user: '{{ player_name }}'

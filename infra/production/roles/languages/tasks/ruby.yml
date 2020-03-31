@@ -1,0 +1,23 @@
+---
+- name: 'add brightbox repo'
+  apt_repository:
+    repo: ppa:brightbox/ruby-ng
+    update_cache: true
+    validate_certs: false
+
+- name: 'install ruby2.6'
+  apt:
+    name: '{{ packages }}'
+    state: present
+  vars:
+    packages:
+      - ruby2.6
+      - ruby2.6-dev
+      - libruby2.6
+
+- name: 'install bundler 2.0.2'
+  gem:
+    name: bundler
+    state: present
+    version: '2.0.2'
+    user_install: no

@@ -1,0 +1,5 @@
+---
+- name: 'remove download data'
+  file:
+    path: '{{ tmp_dir }}'
+    state: absent

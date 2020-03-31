@@ -1,0 +1,54 @@
+<div class="mx-4">
+  <h3>Register teams information</h3>
+  <div class="bs-component">
+    <form action="/admin/register" method="POST">
+      <fieldset>
+        <div class="form-group col-md-12">
+          <label for="team_information">Team Information</label> <br>
+          <textarea name="team_information" class="col-md-12"></textarea>
+        </div>
+      </fieldset>
+      <button class="btn btn-primary btn-lg" type=""submit>Register!</button>
+    </form>
+  </div>
+
+  <h3>Teams</h3>
+  <div class="bs-component">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>team ID</th>
+        <th>team name</th>
+        <th>team portal login name</th>
+        <th>team portal login pw</th>
+        <th>server login username</th>
+        <th>server login password</th>
+        <th>target server public ip</th>
+        <th>target server private ip</th>
+        <th>extra server1 public ip</th>
+        <th>extra server1 private ip</th>
+        <th>extra server2 public ip</th>
+        <th>extra server2 private ip</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @teams.each do |t| %>
+        <tr>
+          <td><%= t.id %></td>
+          <td><%= t.team_name %></td>
+          <td><%= t.name %></td>
+          <td>-</td>
+          <td><pre><%= t.server_username %></pre></td>
+          <td><pre><%= t.server_password %></pre></td>
+          <td><pre><%= t.target_server_pub_ip %></pre></td>
+          <td><pre><%= t.target_server_pri_ip %></pre></td>
+          <td><pre><%= t.extra_server1_pub_ip %></pre></td>
+          <td><pre><%= t.extra_server1_pri_ip %></pre></td>
+          <td><pre><%= t.extra_server2_pub_ip %></pre></td>
+          <td><pre><%= t.extra_server2_pri_ip %></pre></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

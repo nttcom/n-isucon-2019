@@ -1,0 +1,2 @@
+---
+bench_dir: '/home/{{ admin_name }}/bench'

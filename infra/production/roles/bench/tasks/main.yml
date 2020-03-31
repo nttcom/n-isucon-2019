@@ -1,0 +1,6 @@
+---
+- name: 'install middleware'
+  include: install.yml
+
+- name: 'put benchmark'
+  include: deploy.yml

@@ -1,0 +1,39 @@
+
+.pagenate[data-v-7031f3c0] {
+  display: inline;
+}
+.active[data-v-7031f3c0] {
+  background-color: darkblue;
+  color: white;
+}
+.icon[data-v-7031f3c0] {
+  width: 12px;
+  height: 12px;
+}
+
+
+#likes[data-v-33de1c88] {
+  list-style: square;
+}
+
+
+.iconuseritem[data-v-1c4665c3] {
+  width: 16px;
+  height: 16px;
+}
+
+
+.iconuserpage[data-v-73968b0a] {
+  width: 100px;
+  height: 100px;
+}
+
+
+nav ul li {
+  display: inline;
+  margin-right: 5px;
+}
+li {
+  list-style: none;
+}
+

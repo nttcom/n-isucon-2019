@@ -1,0 +1,32 @@
+---
+- name: 'install npm, node'
+  apt:
+    name: '{{ packages }}'
+    state: present
+  vars:
+    packages:
+      - nodejs
+      - npm
+      - node-gyp
+      - nodejs-dev
+      - libssl1.0-dev
+
+- name: 'install n by npm'
+  npm:
+    name: n
+    global: true
+
+- name: 'run n stable'
+  command: n stable
+
+- name: 'remove npm node'
+  apt:
+    name: '{{ packages }}'
+    state: absent
+  vars:
+    packages:
+      - nodejs
+      - npm
+      - node-gyp
+      - nodejs-dev
+      - libssl1.0-dev

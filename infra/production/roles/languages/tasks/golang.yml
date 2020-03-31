@@ -1,0 +1,14 @@
+---
+- name: 'add longsleep repo'
+  apt_repository:
+    repo: ppa:longsleep/golang-backports
+    update_cache: true
+    validate_certs: false
+
+- name: 'install golang 1.12'
+  apt:
+    name: '{{ packages }}'
+    state: present
+  vars:
+    packages:
+      - golang-go

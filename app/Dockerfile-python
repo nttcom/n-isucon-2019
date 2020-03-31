@@ -1,0 +1,21 @@
+FROM python:3.7.1
+
+ARG project_dir=/app/
+ARG app_dir=python
+WORKDIR $project_dir
+
+RUN apt-get update && apt-get install -y mysql-client
+
+ADD $app_dir/requirements.txt $project_dir
+RUN pip install -r requirements.txt
+
+ADD $app_dir/app.py $project_dir
+ADD $app_dir/endpoint.sh $project_dir
+
+COPY $app_dir/utils/ /app/utils/
+COPY ./common/ /app/common/
+COPY ./public/ /app/public/
+
+CMD ["./endpoint.sh"]
+
+EXPOSE 5000

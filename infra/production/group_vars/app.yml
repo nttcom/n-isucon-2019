@@ -1,0 +1,12 @@
+---
+seed_file: seed.sql
+app_dir: '/home/{{ player_name }}/app'
+
+player_password: LuqboPtXoRKub11SA7Y0pLbsNXvCte7QgXakuuFc3qPIUA8pKP
+
+db:
+  host: localhost
+  name: app
+  username: isucon
+  password: nocusi
+  root_password: todoland0910

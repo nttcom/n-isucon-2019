@@ -1,0 +1,14 @@
+---
+- name: 'copy app dir to vm'
+  copy:
+    src: '{{ local_app_dir }}'
+    dest: '{{ tmp_dir }}'
+  become: false
+
+- name: 'create competition directory'
+  file:
+    state: directory
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ player_name }}'
+    mode: '0755'

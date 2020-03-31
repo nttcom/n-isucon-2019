@@ -1,0 +1,45 @@
+---
+- name: 'setup common'
+  hosts:
+    - 'all'
+  roles:
+    - 'common'
+  tags:
+    - 'common'
+
+- name: 'install languages'
+  hosts:
+    - 'all'
+  roles:
+    - 'languages'
+
+- name: 'install database'
+  hosts:
+    - 'app'
+  roles:
+    - 'database'
+
+- name: 'deploy app code'
+  hosts:
+    - 'app'
+  roles:
+    - 'deploy_app'
+  tags:
+    - 'deploy_app'
+
+- name: 'deploy benchmarker'
+  become: true
+  hosts:
+    - 'bench'
+  roles:
+    - 'bench'
+  tags:
+    - 'bench'
+
+# - name: 'deploy portal'
+#   hosts:
+#     - 'portal'
+#   roles:
+#     - 'deploy_portal'
+#   tags:
+#     - 'deploy_portal'

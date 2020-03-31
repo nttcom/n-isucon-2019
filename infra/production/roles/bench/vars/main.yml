@@ -1,0 +1,3 @@
+---
+tmp_dir: /tmp/nisucon_tmp
+bench_dir: '/home/{{ admin_name}}/bench'

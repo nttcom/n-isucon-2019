@@ -1,0 +1,6 @@
+---
+db:
+  name: portal
+  username: isucon-admin
+  password: portal_user_password
+  root_password: portal_root_password

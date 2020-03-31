@@ -1,0 +1,22 @@
+---
+- name: 'install httpd'
+  apt:
+    name: apache2
+
+- name: 'enable proxy mod'
+  apache2_module:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - proxy
+    - proxy_http
+
+- name: 'set proxypass to localhost:5000'
+  copy:
+    src: etc/apache2/sites-enabled/000-default.conf
+    dest: /etc/apache2/sites-enabled/000-default.conf
+
+- name: 'restart apache2'
+  systemd:
+    name: apache2
+    state: restarted

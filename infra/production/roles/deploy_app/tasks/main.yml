@@ -1,0 +1,38 @@
+---
+- include: download_from_github.yml
+  become: true
+  when: local_env is not defined
+
+- include: copy_from_local.yml
+  become: true
+  when: local_env is defined
+
+- include: common_db.yml
+  become: true
+
+- include: seed.yml
+  become: true
+
+- include: python.yml
+  become: true
+
+- include: ruby.yml
+  become: true
+
+- include: golang.yml
+  become: true
+
+- include: node.yml
+  become: true
+
+- include: public.yml
+  become: true
+
+- include: register_to_systemd.yml
+  become: true
+
+- include: httpd.yml
+  become: true
+
+- include: remove.yml
+  become: true

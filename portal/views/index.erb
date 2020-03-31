@@ -1,0 +1,79 @@
+<div class="mx-4">
+  <% if session[:team_id] %>
+  <h3 class="mb-4">Team</h3>
+    <h4>チーム名: <%= @team.team_name %> (Team ID: <%= @team.id %>)</h4>
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-body" style="width: 18rem;">
+        <div class="card-title">Latest Score</div>
+        <div class="card-text"><%= @latest_score %></div>
+      </div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-body" style="width: 18rem;">
+          <div class="card-title">Best Score</div>
+          <div class="card-text"><%= @best_score %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-body" style="width: 18rem;">
+          <div class="card-title">Latest Status</div>
+          <div class="card-text"><%= @latest_status %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-body" style="width: 18rem;">
+          <div class="card-title">Updated At</div>
+          <div class="card-text"><%= @finished_at %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="mb-4">Latest Benchmark Log</h3>
+  <pre>
+<%= @command_result %>
+  </pre>
+  <h3>Benchmark</h3>
+  <button id="bench" class="btn btn-primary btn-lg">Benchmark Request</button>
+  <p id="bench_accept" style="display: none;">ベンチマークリクエストを発行しました。未処理のベンチマークリクエストがある場合は、本リクエストは無視されます。</p>
+  <hr/>
+  <% end %>
+
+  <% if session[:team_id] %>
+    <h3 class="mb-4">Team Information</h3>
+    <div class="information row" id="team-info">
+      <div class="col-md-6">
+        <h4>Server Authentication Information</h4>
+        <dl>
+          <dt>User</dt>
+          <dd>
+            <pre><%= @team.server_username %></pre>
+          </dd>
+          <dt>Password</dt>
+          <dd>
+            <pre><%= @team.server_password %></pre>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-md-6">
+        <h4>Bench Target Server IP</h4>
+        <ul>
+          <li><pre><%= @team.target_server_pub_ip %> | <%= @team.target_server_pri_ip %></pre></li>
+        </ul>
+        <h4>Extra Servers IPs</h4>
+        <ul>
+          <li><pre><%= @team.extra_server1_pub_ip %> | <%= @team.extra_server1_pri_ip %> </pre></li>
+          <li><pre><%= @team.extra_server2_pub_ip %> | <%= @team.extra_server2_pri_ip %> </pre></li>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>

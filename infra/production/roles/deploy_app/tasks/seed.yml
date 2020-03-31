@@ -1,0 +1,24 @@
+---
+- name: 'copy seed data from local'
+  copy:
+    src: '{{ seed_file }}'
+    dest: '/tmp/{{ seed_file }}'
+  when: inventory_hostname in groups['app']
+
+- name: 'put seed data to app/common/db'
+  copy:
+    remote_src: true
+    src: '/tmp/{{ seed_file }}'
+    dest: '{{ app_dir }}/common/db/'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+  notify: 'run initialize'
+
+- name: 'put login info to ENV file'
+  template:
+    src: env.j2
+    dest: '/home/{{ player_name }}/.env'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+  when: inventory_hostname in groups['app']

@@ -1,0 +1,22 @@
+FROM node:10.16.3
+
+ARG project_dir=/app/
+ARG app_dir=node
+WORKDIR $project_dir
+
+RUN apt-get update && apt-get install -y mysql-client
+
+ADD $app_dir/package.json $project_dir
+ADD $app_dir/package-lock.json $project_dir
+RUN npm install
+
+ADD $app_dir/app.js $project_dir
+ADD $app_dir/endpoint.sh $project_dir
+
+# COPY $app_dir/utils/ /app/utils/
+COPY ./common/ /app/common/
+COPY ./public/ /app/public/
+
+CMD ["./endpoint.sh"]
+
+EXPOSE 5000

@@ -1,0 +1,19 @@
+---
+- name: 'install newman'
+  command: npm install -g newman
+
+- name: 'add k6 repo key'
+  apt_key:
+    keyserver: "hkp://keyserver.ubuntu.com:80"
+    id: 379CE192D401AB61
+
+- name: 'add k6 repo'
+  apt_repository:
+    repo: deb https://dl.bintray.com/loadimpact/deb stable main
+    update_cache: true
+    validate_certs: false
+
+- name: 'install k6'
+  apt:
+    name: k6
+    state: present

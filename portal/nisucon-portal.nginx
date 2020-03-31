@@ -1,0 +1,42 @@
+upstream nisucon-portal {
+  server unix://home/isucon_admin/n-isucon-2019/portal/tmp/puma.sock;
+}
+
+server {
+  server_name portal.ncom.dev;
+
+  listen 80;
+  listen [::]:80;
+
+  #rewrite ^(.*) https://$http_host$1 permanent;
+  return 301 https://$host$request_uri;
+  # root /home/isucon_admin/n-isucon-2019/portal;
+
+  # try_files $uri nisucon-portal;
+
+  # location / {
+  #     proxy_set_header Host $http_host;
+  #     proxy_pass http://nisucon-portal;
+  # }
+}
+
+server {
+
+  server_name portal.ncom.dev;
+  listen 443 ssl http2;
+
+  ssl On;
+  ssl_certificate     /etc/nginx/certs/fullchain.pem;
+  ssl_certificate_key /etc/nginx/certs/privkey.pem;
+
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+  root /home/isucon_admin/n-isucon-2019/portal;
+
+  try_files $uri nisucon-portal;
+
+  location / {
+      proxy_set_header Host $http_host;
+      proxy_pass http://nisucon-portal;
+  }
+}

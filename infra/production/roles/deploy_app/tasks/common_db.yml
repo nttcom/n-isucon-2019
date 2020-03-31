@@ -1,0 +1,25 @@
+---
+- name: 'copy common dir to app from repo'
+  copy:
+    remote_src: true
+    src: '{{ tmp_dir }}/app/common'
+    dest: '{{ app_dir }}'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+
+- name: 'put init script to app/common/db '
+  template:
+    src: init.sh.j2
+    dest: '{{ app_dir }}/common/db/init.sh'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'
+
+- name: 'put force initialization script to app/common/db '
+  template:
+    src: initialize_all_db.sh.j2
+    dest: '{{ app_dir }}/common/db/initialize_all_db.sh'
+    owner: '{{ player_name }}'
+    group: '{{ group_name }}'
+    mode: '0755'

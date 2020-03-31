@@ -1,0 +1,20 @@
+FROM ruby:2.6.3
+
+RUN apt-get update && apt-get install -y default-mysql-client
+
+ARG project_dir=/app/
+ARG app_dir=ruby
+WORKDIR $project_dir
+
+COPY $app_dir/ $project_dir
+
+RUN gem install bundler -v 2.0.1
+RUN bundle install --force --path vendor/bundle
+
+COPY $app_dir/utils/ /app/utils/
+COPY common/ /app/common/
+COPY public/ /app/public/
+
+EXPOSE 5000
+
+CMD ["bundle", "exec", "rackup", "-o", "0.0.0.0", "-p", "5000"]
